@@ -15,6 +15,7 @@ interface Ball {
 class GameModel {
   bullets: Bullet[] = [];
   balls: Ball[] = [];
+  coins: number = 0; 
 
   addBullet(bullet: Bullet): void {
     this.bullets.push(bullet);
@@ -152,6 +153,9 @@ class GameController {
         if (collision) {
           this.model.removeBall(ball);
           this.model.removeBullet(bullet);
+        
+        this.model.coins += 1;
+        this.view.updateCoinCount(this.model.coins);
         }
       });
     });
@@ -162,10 +166,12 @@ class GameController {
 class GameView {
   cannon: HTMLImageElement;
   background: HTMLElement;
+  coinCountEl: HTMLElement;
 
   constructor() {
     this.cannon = document.getElementById("cannon") as HTMLImageElement;
     this.background = document.querySelector(".game-container__background") as HTMLElement;
+    this.coinCountEl = document.getElementById("coinCount") as HTMLElement;
   }
 
   moveCannon(x: number): void {
@@ -180,6 +186,9 @@ class GameView {
     this.background.appendChild(bullet);
     return bullet;
   }
+  updateCoinCount(coins: number): void {
+    this.coinCountEl.textContent = coins.toString();
+  }
 }
 
 
@@ -187,5 +196,6 @@ class GameView {
 document.addEventListener("DOMContentLoaded", () => {
   const model = new GameModel();
   const view = new GameView();
+  view.updateCoinCount(model.coins);
   new GameController(model, view);
 });
