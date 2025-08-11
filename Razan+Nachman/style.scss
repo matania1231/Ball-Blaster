@@ -82,8 +82,8 @@
 
 #pauseButton {
   position: fixed;
-  top: 2%;   // instead of % from top
-  left: 34%;  // instead of % from left
+  top: 2%; 
+  left: 35%; 
   width: 55px;
   height: 54px;
   background-color: #ffcc00;
@@ -97,7 +97,7 @@
   #pauseButton:hover {
     background-color: rgba(255, 255, 255, 1);
   }
-  
+
   #coinBarContainer {
     pointer-events: auto;
     position: absolute;
