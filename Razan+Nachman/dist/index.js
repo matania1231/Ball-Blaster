@@ -3,6 +3,8 @@ var GameModel = /** @class */ (function () {
         this.bullets = [];
         this.balls = [];
         this.coins = 0;
+        this.ballSpeed = 2;
+        this.lives = 3;
     }
     GameModel.prototype.addBullet = function (bullet) {
         this.bullets.push(bullet);
@@ -90,11 +92,12 @@ var GameController = /** @class */ (function () {
             y: y,
             radius: radius,
             intervalId: window.setInterval(function () {
-                y += 2;
+                y += _this.model.ballSpeed;
                 ball.y = y;
                 ballEl.style.top = y + "px";
                 if (y > _this.view.background.offsetHeight) {
                     _this.model.removeBall(ball);
+                    _this.loseLife();
                 }
             }, 16)
         };
@@ -123,6 +126,20 @@ var GameController = /** @class */ (function () {
             });
         });
     };
+    GameController.prototype.increaseDifficulty = function () {
+        var _this = this;
+        setInterval(function () {
+            _this.model.ballSpeed += 0.5;
+        }, 10000);
+    };
+    GameController.prototype.loseLife = function () {
+        this.model.lives--;
+        this.view.updateHearts(this.model.lives);
+        if (this.model.lives <= 0) {
+            alert("Game Over!");
+            location.reload();
+        }
+    };
     return GameController;
 }());
 // VIEW
@@ -131,6 +148,7 @@ var GameView = /** @class */ (function () {
         this.cannon = document.getElementById("cannon");
         this.background = document.querySelector(".game-container__background");
         this.coinCountEl = document.getElementById("coinCount");
+        this.heartsContainer = document.getElementById("heartsContainer");
     }
     GameView.prototype.moveCannon = function (x) {
         this.cannon.style.left = x + "px";
@@ -146,6 +164,9 @@ var GameView = /** @class */ (function () {
     GameView.prototype.updateCoinCount = function (coins) {
         this.coinCountEl.textContent = coins.toString();
     };
+    GameView.prototype.updateHearts = function (lives) {
+        this.heartsContainer.textContent = "❤️".repeat(lives);
+    };
     return GameView;
 }());
 // INIT
@@ -153,5 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var model = new GameModel();
     var view = new GameView();
     view.updateCoinCount(model.coins);
+    view.updateHearts(model.lives);
     new GameController(model, view);
 });

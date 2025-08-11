@@ -16,6 +16,8 @@ class GameModel {
   bullets: Bullet[] = [];
   balls: Ball[] = [];
   coins: number = 0; 
+  ballSpeed: number = 2;
+  lives: number = 3;
 
   addBullet(bullet: Bullet): void {
     this.bullets.push(bullet);
@@ -120,12 +122,13 @@ class GameController {
       y,
       radius,
       intervalId: window.setInterval(() => {
-        y += 2;
+        y += this.model.ballSpeed;
         ball.y = y;
         ballEl.style.top = `${y}px`;
 
         if (y > this.view.background.offsetHeight) {
           this.model.removeBall(ball);
+          this.loseLife();
         }
       }, 16),
     };
@@ -160,6 +163,20 @@ class GameController {
       });
     });
   }
+  increaseDifficulty(): void {
+  setInterval(() => {
+    this.model.ballSpeed += 0.5;
+  }, 10000);
+  }
+  loseLife(): void {
+  this.model.lives--;
+  this.view.updateHearts(this.model.lives);
+
+  if (this.model.lives <= 0) {
+    alert("Game Over!");
+    location.reload();
+  }
+  }
 }
 
 // VIEW
@@ -167,11 +184,13 @@ class GameView {
   cannon: HTMLImageElement;
   background: HTMLElement;
   coinCountEl: HTMLElement;
+  heartsContainer: HTMLElement;
 
   constructor() {
     this.cannon = document.getElementById("cannon") as HTMLImageElement;
     this.background = document.querySelector(".game-container__background") as HTMLElement;
     this.coinCountEl = document.getElementById("coinCount") as HTMLElement;
+    this.heartsContainer = document.getElementById("heartsContainer") as HTMLElement;
   }
 
   moveCannon(x: number): void {
@@ -189,13 +208,16 @@ class GameView {
   updateCoinCount(coins: number): void {
     this.coinCountEl.textContent = coins.toString();
   }
+  updateHearts(lives: number): void {
+    this.heartsContainer.textContent = "❤️".repeat(lives);
+  }
 }
-
 
 // INIT
 document.addEventListener("DOMContentLoaded", () => {
   const model = new GameModel();
   const view = new GameView();
   view.updateCoinCount(model.coins);
+  view.updateHearts(model.lives);
   new GameController(model, view);
 });
