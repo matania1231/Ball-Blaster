@@ -53,8 +53,8 @@
 .game-container #pauseButton {
   pointer-events: auto;
   position: absolute;
-  top: 15px;
-  left: 50px;
+  top: 2%;
+  left: 7%;
   z-index: 1001;
   background-color: rgba(255, 132, 0, 0.872);
   border: none;
@@ -88,8 +88,8 @@
 .game-container #coinBarContainer {
   pointer-events: auto;
   position: absolute;
-  top: 15px;
-  right: 640px;
+  top: 4%;
+  right: 35%;
   display: flex;
   align-items: center;
   gap: 8px;
