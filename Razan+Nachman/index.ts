@@ -192,10 +192,10 @@ class GameController {
       this.isPaused = !this.isPaused;
 
       if (this.isPaused) {
-        pauseBtn.textContent = "▶";
+        pauseBtn.innerHTML = '<i class="fa fa-play"></i>';
         this.pauseGame();
-      } else {
-        pauseBtn.textContent = "⏸";
+        } else {
+        pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         this.resumeGame();
       }
     });

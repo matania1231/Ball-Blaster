@@ -153,11 +153,11 @@ var GameController = /** @class */ (function () {
         pauseBtn.addEventListener("click", function () {
             _this.isPaused = !_this.isPaused;
             if (_this.isPaused) {
-                pauseBtn.textContent = "▶";
+                pauseBtn.innerHTML = '<i class="fa fa-play"></i>';
                 _this.pauseGame();
             }
             else {
-                pauseBtn.textContent = "⏸";
+                pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
                 _this.resumeGame();
             }
         });
