@@ -172,7 +172,9 @@ class GameController {
   }
   increaseDifficulty(): void {
   setInterval(() => {
-    this.model.ballSpeed += 0.5;
+    if (!this.isPaused) {
+      this.model.ballSpeed += 0.5;
+    }
   }, 2000);
   }
   loseLife(): void {

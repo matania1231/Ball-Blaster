@@ -134,7 +134,9 @@ var GameController = /** @class */ (function () {
     GameController.prototype.increaseDifficulty = function () {
         var _this = this;
         setInterval(function () {
-            _this.model.ballSpeed += 0.5;
+            if (!_this.isPaused) {
+                _this.model.ballSpeed += 0.5;
+            }
         }, 2000);
     };
     GameController.prototype.loseLife = function () {
