@@ -72,12 +72,12 @@
 }
 .game-container #pauseButton {
   position: fixed;
-  top: 15px;
-  left: 650px;
+  top: 2%;
+  left: 34%;
   width: 55px;
-  height: 50px;
+  height: 54px;
   background-color: #ffcc00;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   border-radius: 50%;
   border: none;
   cursor: pointer;
