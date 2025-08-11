@@ -34,6 +34,7 @@ var GameModel = /** @class */ (function () {
 var GameController = /** @class */ (function () {
     function GameController(model, view) {
         this.isPaused = false;
+        this.hasShownHighscoreMessage = false;
         this.model = model;
         this.view = view;
         this.init();
@@ -133,6 +134,7 @@ var GameController = /** @class */ (function () {
                     if (_this.model.coins > highscore) {
                         _this.setHighscore(_this.model.coins);
                         _this.view.showHighscoreMessage();
+                        _this.hasShownHighscoreMessage = true;
                     }
                 }
             });

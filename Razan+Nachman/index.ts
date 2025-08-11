@@ -54,6 +54,7 @@ class GameController {
   isPaused: boolean = false;
   spawnIntervalId?: number;
   difficultyIntervalId?: number;
+  hasShownHighscoreMessage: boolean = false;
 
   constructor(model: GameModel, view: GameView) {
     this.model = model;
@@ -174,6 +175,7 @@ class GameController {
         if (this.model.coins > highscore) {
           this.setHighscore(this.model.coins);
           this.view.showHighscoreMessage();
+          this.hasShownHighscoreMessage = true;
           }
       }
     });
