@@ -2,6 +2,7 @@ var GameModel = /** @class */ (function () {
     function GameModel() {
         this.bullets = [];
         this.balls = [];
+        this.coins = 0;
     }
     GameModel.prototype.addBullet = function (bullet) {
         this.bullets.push(bullet);
@@ -116,6 +117,8 @@ var GameController = /** @class */ (function () {
                 if (collision) {
                     _this.model.removeBall(ball);
                     _this.model.removeBullet(bullet);
+                    _this.model.coins += 1;
+                    _this.view.updateCoinCount(_this.model.coins);
                 }
             });
         });
@@ -127,6 +130,7 @@ var GameView = /** @class */ (function () {
     function GameView() {
         this.cannon = document.getElementById("cannon");
         this.background = document.querySelector(".game-container__background");
+        this.coinCountEl = document.getElementById("coinCount");
     }
     GameView.prototype.moveCannon = function (x) {
         this.cannon.style.left = x + "px";
@@ -139,11 +143,15 @@ var GameView = /** @class */ (function () {
         this.background.appendChild(bullet);
         return bullet;
     };
+    GameView.prototype.updateCoinCount = function (coins) {
+        this.coinCountEl.textContent = coins.toString();
+    };
     return GameView;
 }());
 // INIT
 document.addEventListener("DOMContentLoaded", function () {
     var model = new GameModel();
     var view = new GameView();
+    view.updateCoinCount(model.coins);
     new GameController(model, view);
 });
