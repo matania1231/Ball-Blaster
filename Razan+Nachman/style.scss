@@ -5,6 +5,7 @@
     height: 100vh;
     overflow: hidden;
   }
+
   &__background {
     position: relative;
     height: 100vh;
@@ -15,6 +16,7 @@
     background-position: center center;
     background-size: contain;
     overflow: hidden;
+    animation: sky-move 60s linear infinite;
   }
 
   #cannon {
@@ -24,6 +26,7 @@
     width: 150px;
     transition: left 0.1s linear;
     pointer-events: none;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
   }
 
   .bullet {
@@ -31,20 +34,39 @@
     width: 5px;
     height: 15px;
     background: rgb(92, 45, 6);
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 40%, transparent 70%);
+      border-radius: 50%;
+      animation: muzzle-flash 0.25s ease-out;
+      pointer-events: none;
+    }
   }
 
   .ball {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, hsl(0, 70%, 80%), hsl(0, 70%, 50%));
-  box-shadow:
-    inset 5px 5px 8px rgba(255, 255, 255, 0.5), 
-    0 0 15px rgba(0, 0, 0, 0.3);                 
-  animation: float-down 10s linear, spin 2s linear infinite;
-  transition: background-color 0.3s ease;
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, hsl(0, 70%, 80%), hsl(0, 70%, 50%));
+    box-shadow:
+      inset 5px 5px 8px rgba(255, 255, 255, 0.5), 
+      0 0 15px rgba(0, 0, 0, 0.3),
+      0 5px 10px rgba(0, 0, 0, 0.2);
+    animation: float-down 10s linear, spin 2s linear infinite;
+    transition: background-color 0.3s ease;
 
     &.random-color {
-    background: radial-gradient(circle at 30% 30%, hsl(var(--hue), 70%, 80%), hsl(var(--hue), 70%, 50%));
+      background: radial-gradient(circle at 30% 30%, hsl(var(--hue), 70%, 80%), hsl(var(--hue), 70%, 50%));
+    }
+
+    &.pop {
+      animation: pop 0.3s forwards;
     }
   }
 
@@ -112,18 +134,56 @@
 
   #coinIcon {
     font-size: 18px;
-    color : rgb(246, 255, 0);
+    color: rgb(246, 255, 0);
   }
 
   #coinCount {
-    color: rgb(246, 255, 0);
+    color: rgb(38, 250, 70);
     font-size: 16px;
     font-weight: bold;
     min-width: 20px;
   }
+
+  /* Grass overlay for movement */
+  .grass-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 15%;
+    background: url("../imgs/grass.png") repeat-x;
+    background-size: cover;
+    animation: grass-sway 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
 }
 
+/* Animations */
 @keyframes spin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes sky-move {
+  0% { background-position: center 0; }
+  100% { background-position: center -50px; }
+}
+
+@keyframes grass-sway {
+  0% { transform: skewX(0deg); }
+  100% { transform: skewX(1deg); }
+}
+
+@keyframes smoke {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(0.5); }
+  100% { opacity: 0; transform: translate(-50%, -20px) scale(1.5); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+@keyframes muzzle-flash {
+  0% { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.8); }
 }
