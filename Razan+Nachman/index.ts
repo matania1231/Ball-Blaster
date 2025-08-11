@@ -54,6 +54,7 @@ class GameController {
   isPaused: boolean = false;
   spawnIntervalId?: number;
   difficultyIntervalId?: number;
+  hasShownHighscoreMessage: boolean = false;
 
   constructor(model: GameModel, view: GameView) {
     this.model = model;
@@ -170,6 +171,12 @@ class GameController {
 
         this.model.coins += 1;
         this.view.updateCoinCount(this.model.coins);
+        const highscore = this.getHighscore();
+        if (this.model.coins > highscore) {
+          this.setHighscore(this.model.coins);
+          this.view.showHighscoreMessage();
+          this.hasShownHighscoreMessage = true;
+          }
       }
     });
   });
@@ -242,7 +249,13 @@ class GameController {
     }, 16);
   });
 }
+getHighscore(): number {
+  return Number(localStorage.getItem('highscore') || '0');
+}
 
+setHighscore(score: number): void {
+  localStorage.setItem('highscore', score.toString());
+}
 
 }
 
@@ -252,12 +265,14 @@ class GameView {
   background: HTMLElement;
   coinCountEl: HTMLElement;
   heartsContainer: HTMLElement;
+  highscoreMessageEl: HTMLElement;
 
   constructor() {
     this.cannon = document.getElementById("cannon") as HTMLImageElement;
     this.background = document.querySelector(".game-container__background") as HTMLElement;
     this.coinCountEl = document.getElementById("coinCount") as HTMLElement;
     this.heartsContainer = document.getElementById("heartsContainer") as HTMLElement;
+    this.highscoreMessageEl = document.getElementById('highscoreMessage') as HTMLElement;
   }
 
   moveCannon(x: number): void {
@@ -277,6 +292,13 @@ class GameView {
   }
   updateHearts(lives: number): void {
     this.heartsContainer.textContent = "❤️".repeat(lives);
+  }
+  showHighscoreMessage(): void {
+    this.highscoreMessageEl.style.display = 'block';
+
+    setTimeout(() => {
+      this.highscoreMessageEl.style.display = 'none';
+    }, 3000); 
   }
 }
 

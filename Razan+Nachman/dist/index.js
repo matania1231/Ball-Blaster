@@ -34,6 +34,7 @@ var GameModel = /** @class */ (function () {
 var GameController = /** @class */ (function () {
     function GameController(model, view) {
         this.isPaused = false;
+        this.hasShownHighscoreMessage = false;
         this.model = model;
         this.view = view;
         this.init();
@@ -129,6 +130,12 @@ var GameController = /** @class */ (function () {
                     _this.model.removeBullet(bullet);
                     _this.model.coins += 1;
                     _this.view.updateCoinCount(_this.model.coins);
+                    var highscore = _this.getHighscore();
+                    if (_this.model.coins > highscore) {
+                        _this.setHighscore(_this.model.coins);
+                        _this.view.showHighscoreMessage();
+                        _this.hasShownHighscoreMessage = true;
+                    }
                 }
             });
         });
@@ -197,6 +204,12 @@ var GameController = /** @class */ (function () {
             }, 16);
         });
     };
+    GameController.prototype.getHighscore = function () {
+        return Number(localStorage.getItem('highscore') || '0');
+    };
+    GameController.prototype.setHighscore = function (score) {
+        localStorage.setItem('highscore', score.toString());
+    };
     return GameController;
 }());
 // VIEW
@@ -206,6 +219,7 @@ var GameView = /** @class */ (function () {
         this.background = document.querySelector(".game-container__background");
         this.coinCountEl = document.getElementById("coinCount");
         this.heartsContainer = document.getElementById("heartsContainer");
+        this.highscoreMessageEl = document.getElementById('highscoreMessage');
     }
     GameView.prototype.moveCannon = function (x) {
         this.cannon.style.left = x + "px";
@@ -223,6 +237,13 @@ var GameView = /** @class */ (function () {
     };
     GameView.prototype.updateHearts = function (lives) {
         this.heartsContainer.textContent = "❤️".repeat(lives);
+    };
+    GameView.prototype.showHighscoreMessage = function () {
+        var _this = this;
+        this.highscoreMessageEl.style.display = 'block';
+        setTimeout(function () {
+            _this.highscoreMessageEl.style.display = 'none';
+        }, 3000);
     };
     return GameView;
 }());
