@@ -32,14 +32,13 @@
 .game-container .ball {
   position: absolute;
   border-radius: 50%;
-  background-color: #e05252;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  animation: float-down linear;
-  animation-duration: 10s;
+  background: radial-gradient(circle at 30% 30%, #f0a8a8, #d92626);
+  box-shadow: inset 5px 5px 8px rgba(255, 255, 255, 0.5), 0 0 15px rgba(0, 0, 0, 0.3);
+  animation: float-down 10s linear, spin 2s linear infinite;
   transition: background-color 0.3s ease;
 }
 .game-container .ball.random-color {
-  background-color: hsl(var(--hue), 70%, 60%);
+  background: radial-gradient(circle at 30% 30%, hsl(var(--hue), 70%, 80%), hsl(var(--hue), 70%, 50%));
 }
 .game-container__overlay {
   position: absolute;
@@ -106,4 +105,13 @@
   font-size: 16px;
   font-weight: bold;
   min-width: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
