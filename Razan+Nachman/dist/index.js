@@ -114,6 +114,8 @@ var GameController = /** @class */ (function () {
     };
     GameController.prototype.checkCollision = function () {
         var _this = this;
+        if (this.isPaused)
+            return; // skip collision checks when paused
         this.model.bullets.forEach(function (bullet) {
             var bulletRect = bullet.element.getBoundingClientRect();
             _this.model.balls.forEach(function (ball) {
@@ -164,11 +166,14 @@ var GameController = /** @class */ (function () {
     };
     GameController.prototype.pauseGame = function () {
         clearInterval(this.spawnIntervalId);
+        clearInterval(this.difficultyIntervalId);
         this.model.bullets.forEach(function (bullet) { return clearInterval(bullet.intervalId); });
         this.model.balls.forEach(function (ball) { return clearInterval(ball.intervalId); });
     };
     GameController.prototype.resumeGame = function () {
         var _this = this;
+        this.increaseDifficulty();
+        this.spawnBalls();
         this.model.bullets.forEach(function (bullet) {
             bullet.intervalId = window.setInterval(function () {
                 var top = parseFloat(bullet.element.style.top);
@@ -191,7 +196,6 @@ var GameController = /** @class */ (function () {
                 }
             }, 16);
         });
-        this.spawnBalls();
     };
     return GameController;
 }());

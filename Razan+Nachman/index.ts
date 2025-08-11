@@ -53,6 +53,7 @@ class GameController {
   view: GameView;
   isPaused: boolean = false;
   spawnIntervalId?: number;
+  difficultyIntervalId?: number;
 
   constructor(model: GameModel, view: GameView) {
     this.model = model;
@@ -61,6 +62,7 @@ class GameController {
     this.spawnBalls();
     this.increaseDifficulty(); 
     this.setupPauseButton();
+    
   }
 
   init(): void {
@@ -148,28 +150,30 @@ class GameController {
 
 
   checkCollision(): void {
-    this.model.bullets.forEach((bullet) => {
-      const bulletRect = bullet.element.getBoundingClientRect();
+  if (this.isPaused) return; // skip collision checks when paused
 
-      this.model.balls.forEach((ball) => {
-        const ballRect = ball.element.getBoundingClientRect();
+  this.model.bullets.forEach((bullet) => {
+    const bulletRect = bullet.element.getBoundingClientRect();
 
-        const collision =
-          bulletRect.left < ballRect.right &&
-          bulletRect.right > ballRect.left &&
-          bulletRect.top < ballRect.bottom &&
-          bulletRect.bottom > ballRect.top;
+    this.model.balls.forEach((ball) => {
+      const ballRect = ball.element.getBoundingClientRect();
 
-        if (collision) {
-          this.model.removeBall(ball);
-          this.model.removeBullet(bullet);
-        
+      const collision =
+        bulletRect.left < ballRect.right &&
+        bulletRect.right > ballRect.left &&
+        bulletRect.top < ballRect.bottom &&
+        bulletRect.bottom > ballRect.top;
+
+      if (collision) {
+        this.model.removeBall(ball);
+        this.model.removeBullet(bullet);
+
         this.model.coins += 1;
         this.view.updateCoinCount(this.model.coins);
-        }
-      });
+      }
     });
-  }
+  });
+}
   increaseDifficulty(): void {
   setInterval(() => {
     if (!this.isPaused) {
@@ -202,39 +206,43 @@ class GameController {
   }
     pauseGame(): void {
     clearInterval(this.spawnIntervalId);
+    clearInterval(this.difficultyIntervalId);
 
     this.model.bullets.forEach(bullet => clearInterval(bullet.intervalId));
-
     this.model.balls.forEach(ball => clearInterval(ball.intervalId));
-  }
+}
+
 
   resumeGame(): void {
-    this.model.bullets.forEach(bullet => {
-      bullet.intervalId = window.setInterval(() => {
-        const top = parseFloat(bullet.element.style.top);
-        if (top <= -20) {
-          this.model.removeBullet(bullet);
-        } else {
-          bullet.element.style.top = `${top - 10}px`;
-          this.checkCollision();
-        }
-      }, 20);
-    });
 
-    this.model.balls.forEach(ball => {
-      ball.intervalId = window.setInterval(() => {
-        ball.y += this.model.ballSpeed;
-        ball.element.style.top = `${ball.y}px`;
+  this.increaseDifficulty();
+  this.spawnBalls();
 
-        if (ball.y > this.view.background.offsetHeight) {
-          this.model.removeBall(ball);
-          this.loseLife();
-        }
-      }, 16);
-    });
+  this.model.bullets.forEach(bullet => {
+    bullet.intervalId = window.setInterval(() => {
+      const top = parseFloat(bullet.element.style.top);
+      if (top <= -20) {
+        this.model.removeBullet(bullet);
+      } else {
+        bullet.element.style.top = `${top - 10}px`;
+        this.checkCollision();
+      }
+    }, 20);
+  });
 
-    this.spawnBalls();
-  }
+  this.model.balls.forEach(ball => {
+    ball.intervalId = window.setInterval(() => {
+      ball.y += this.model.ballSpeed;
+      ball.element.style.top = `${ball.y}px`;
+
+      if (ball.y > this.view.background.offsetHeight) {
+        this.model.removeBall(ball);
+        this.loseLife();
+      }
+    }, 16);
+  });
+}
+
 
 }
 
