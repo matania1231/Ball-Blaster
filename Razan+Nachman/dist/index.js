@@ -33,10 +33,13 @@ var GameModel = /** @class */ (function () {
 // CONTROLLER
 var GameController = /** @class */ (function () {
     function GameController(model, view) {
+        this.isPaused = false;
         this.model = model;
         this.view = view;
         this.init();
         this.spawnBalls();
+        this.increaseDifficulty();
+        this.setupPauseButton();
     }
     GameController.prototype.init = function () {
         this.view.background.addEventListener("mousemove", this.handleMouseMove.bind(this));
@@ -105,7 +108,9 @@ var GameController = /** @class */ (function () {
     };
     GameController.prototype.spawnBalls = function () {
         var _this = this;
-        setInterval(function () { return _this.createBall(); }, 1500);
+        this.spawnIntervalId = window.setInterval(function () {
+            _this.createBall();
+        }, 1500);
     };
     GameController.prototype.checkCollision = function () {
         var _this = this;
@@ -130,7 +135,7 @@ var GameController = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             _this.model.ballSpeed += 0.5;
-        }, 10000);
+        }, 2000);
     };
     GameController.prototype.loseLife = function () {
         this.model.lives--;
@@ -139,6 +144,52 @@ var GameController = /** @class */ (function () {
             alert("Game Over!");
             location.reload();
         }
+    };
+    GameController.prototype.setupPauseButton = function () {
+        var _this = this;
+        var pauseBtn = document.getElementById("pauseButton");
+        pauseBtn.addEventListener("click", function () {
+            _this.isPaused = !_this.isPaused;
+            if (_this.isPaused) {
+                pauseBtn.textContent = "▶";
+                _this.pauseGame();
+            }
+            else {
+                pauseBtn.textContent = "⏸";
+                _this.resumeGame();
+            }
+        });
+    };
+    GameController.prototype.pauseGame = function () {
+        clearInterval(this.spawnIntervalId);
+        this.model.bullets.forEach(function (bullet) { return clearInterval(bullet.intervalId); });
+        this.model.balls.forEach(function (ball) { return clearInterval(ball.intervalId); });
+    };
+    GameController.prototype.resumeGame = function () {
+        var _this = this;
+        this.model.bullets.forEach(function (bullet) {
+            bullet.intervalId = window.setInterval(function () {
+                var top = parseFloat(bullet.element.style.top);
+                if (top <= -20) {
+                    _this.model.removeBullet(bullet);
+                }
+                else {
+                    bullet.element.style.top = top - 10 + "px";
+                    _this.checkCollision();
+                }
+            }, 20);
+        });
+        this.model.balls.forEach(function (ball) {
+            ball.intervalId = window.setInterval(function () {
+                ball.y += _this.model.ballSpeed;
+                ball.element.style.top = ball.y + "px";
+                if (ball.y > _this.view.background.offsetHeight) {
+                    _this.model.removeBall(ball);
+                    _this.loseLife();
+                }
+            }, 16);
+        });
+        this.spawnBalls();
     };
     return GameController;
 }());

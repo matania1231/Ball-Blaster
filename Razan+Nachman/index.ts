@@ -51,12 +51,16 @@ class GameModel {
 class GameController {
   model: GameModel;
   view: GameView;
+  isPaused: boolean = false;
+  spawnIntervalId?: number;
 
   constructor(model: GameModel, view: GameView) {
     this.model = model;
     this.view = view;
     this.init();
     this.spawnBalls();
+    this.increaseDifficulty(); 
+    this.setupPauseButton();
   }
 
   init(): void {
@@ -136,9 +140,12 @@ class GameController {
     this.model.addBall(ball);
   }
 
-  spawnBalls(): void {
-    setInterval(() => this.createBall(), 1500);
+    spawnBalls(): void {
+    this.spawnIntervalId = window.setInterval(() => {
+      this.createBall();
+    }, 1500);
   }
+
 
   checkCollision(): void {
     this.model.bullets.forEach((bullet) => {
@@ -166,7 +173,7 @@ class GameController {
   increaseDifficulty(): void {
   setInterval(() => {
     this.model.ballSpeed += 0.5;
-  }, 10000);
+  }, 2000);
   }
   loseLife(): void {
   this.model.lives--;
@@ -177,6 +184,56 @@ class GameController {
     location.reload();
   }
   }
+    setupPauseButton(): void {
+    const pauseBtn = document.getElementById("pauseButton") as HTMLButtonElement;
+    pauseBtn.addEventListener("click", () => {
+      this.isPaused = !this.isPaused;
+
+      if (this.isPaused) {
+        pauseBtn.textContent = "▶";
+        this.pauseGame();
+      } else {
+        pauseBtn.textContent = "⏸";
+        this.resumeGame();
+      }
+    });
+  }
+    pauseGame(): void {
+    clearInterval(this.spawnIntervalId);
+
+    this.model.bullets.forEach(bullet => clearInterval(bullet.intervalId));
+
+    this.model.balls.forEach(ball => clearInterval(ball.intervalId));
+  }
+
+  resumeGame(): void {
+    this.model.bullets.forEach(bullet => {
+      bullet.intervalId = window.setInterval(() => {
+        const top = parseFloat(bullet.element.style.top);
+        if (top <= -20) {
+          this.model.removeBullet(bullet);
+        } else {
+          bullet.element.style.top = `${top - 10}px`;
+          this.checkCollision();
+        }
+      }, 20);
+    });
+
+    this.model.balls.forEach(ball => {
+      ball.intervalId = window.setInterval(() => {
+        ball.y += this.model.ballSpeed;
+        ball.element.style.top = `${ball.y}px`;
+
+        if (ball.y > this.view.background.offsetHeight) {
+          this.model.removeBall(ball);
+          this.loseLife();
+        }
+      }, 16);
+    });
+
+    this.spawnBalls();
+  }
+
 }
 
 // VIEW
