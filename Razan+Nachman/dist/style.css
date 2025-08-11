@@ -1,0 +1,109 @@
+.game-container__wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.game-container__background {
+  position: relative;
+  height: 100vh;
+  width: 73vh;
+  margin: 0 auto;
+  background-image: url("../imgs/background.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  overflow: hidden;
+}
+.game-container #cannon {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  width: 150px;
+  transition: left 0.1s linear;
+  pointer-events: none;
+}
+.game-container .bullet {
+  position: absolute;
+  width: 5px;
+  height: 15px;
+  background: #5c2d06;
+}
+.game-container .ball {
+  position: absolute;
+  border-radius: 50%;
+  background-color: #e05252;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  animation: float-down linear;
+  animation-duration: 10s;
+  transition: background-color 0.3s ease;
+}
+.game-container .ball.random-color {
+  background-color: hsl(var(--hue), 70%, 60%);
+}
+.game-container__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 3000;
+}
+.game-container #pauseButton {
+  pointer-events: auto;
+  position: absolute;
+  top: 15px;
+  left: 50px;
+  z-index: 1001;
+  background-color: rgba(255, 132, 0, 0.872);
+  border: none;
+  border-radius: 6px;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.game-container #pauseButton:hover {
+  background-color: white;
+}
+.game-container #scoreBarContainer {
+  pointer-events: auto;
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 25px;
+  background-color: rgba(255, 0, 0, 0.3);
+  border: 2px solid #ffa600;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.game-container #scoreBar {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(225, 224, 151, 0.556);
+  transition: width 0.3s ease;
+}
+.game-container #coinBarContainer {
+  pointer-events: auto;
+  position: absolute;
+  top: 15px;
+  right: 640px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.419);
+  border-radius: 12px;
+  padding: 5px 12px;
+}
+.game-container #coinIcon {
+  font-size: 18px;
+  color: #f6ff00;
+}
+.game-container #coinCount {
+  color: #f6ff00;
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 20px;
+}
