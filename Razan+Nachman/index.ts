@@ -173,10 +173,13 @@ class GameController {
         this.view.updateCoinCount(this.model.coins);
         const highscore = this.getHighscore();
         if (this.model.coins > highscore) {
-          this.setHighscore(this.model.coins);
-          this.view.showHighscoreMessage();
-          this.hasShownHighscoreMessage = true;
-          }
+        this.setHighscore(this.model.coins);
+        if (!this.hasShownHighscoreMessage) {
+         this.view.showHighscoreMessage();
+      this.hasShownHighscoreMessage = true;
+      }
+      }
+
       }
     });
   });

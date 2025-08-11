@@ -133,8 +133,10 @@ var GameController = /** @class */ (function () {
                     var highscore = _this.getHighscore();
                     if (_this.model.coins > highscore) {
                         _this.setHighscore(_this.model.coins);
-                        _this.view.showHighscoreMessage();
-                        _this.hasShownHighscoreMessage = true;
+                        if (!_this.hasShownHighscoreMessage) {
+                            _this.view.showHighscoreMessage();
+                            _this.hasShownHighscoreMessage = true;
+                        }
                     }
                 }
             });
