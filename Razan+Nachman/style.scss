@@ -19,14 +19,24 @@
     animation: sky-move 60s linear infinite;
   }
 
-  #cannon {
-    position: absolute;
-    bottom: 15%;
-    left: 0;
-    width: 150px;
-    transition: left 0.1s linear;
-    pointer-events: none;
-    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+#cannon {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  width: 150px;
+  transition: left 0.1s linear;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border: none;
+}
+  &:focus {
+    outline: none;
   }
 
   .bullet {
