@@ -57,6 +57,7 @@ class GameController {
     this.view = view;
     this.init();
     this.spawnBalls();
+    this.increaseDifficulty(); 
   }
 
   init(): void {
@@ -166,7 +167,7 @@ class GameController {
   increaseDifficulty(): void {
   setInterval(() => {
     this.model.ballSpeed += 0.5;
-  }, 10000);
+  }, 2000);
   }
   loseLife(): void {
   this.model.lives--;

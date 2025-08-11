@@ -37,6 +37,7 @@ var GameController = /** @class */ (function () {
         this.view = view;
         this.init();
         this.spawnBalls();
+        this.increaseDifficulty();
     }
     GameController.prototype.init = function () {
         this.view.background.addEventListener("mousemove", this.handleMouseMove.bind(this));
@@ -130,7 +131,7 @@ var GameController = /** @class */ (function () {
         var _this = this;
         setInterval(function () {
             _this.model.ballSpeed += 0.5;
-        }, 10000);
+        }, 2000);
     };
     GameController.prototype.loseLife = function () {
         this.model.lives--;
