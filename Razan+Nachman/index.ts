@@ -189,7 +189,7 @@ class GameController {
     if (!this.isPaused) {
       this.model.ballSpeed += 0.5;
     }
-  }, 2000);
+  }, 10000);
   }
   loseLife(): void {
   this.model.lives--;

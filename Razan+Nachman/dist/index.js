@@ -148,7 +148,7 @@ var GameController = /** @class */ (function () {
             if (!_this.isPaused) {
                 _this.model.ballSpeed += 0.5;
             }
-        }, 2000);
+        }, 10000);
     };
     GameController.prototype.loseLife = function () {
         this.model.lives--;
